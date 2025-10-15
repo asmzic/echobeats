@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EchoBeats | A Sound World by ASMZIC</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ribbon"></div>
+  <header>
+    <h1>🎧 EchoBeats</h1>
+    <p>A Sound World by ASMZIC</p>
+    <button id="theme-toggle">🌙</button>
+  </header>
+
+  <main>
+    <section class="player">
+      <img id="cover" src="images/default-cover.jpg" alt="Album cover" />
+      <h2 id="song-title">No song playing</h2>
+      <!-- Audio engine -->
+       <audio id="audio"></audio>
+       
+       <!-- Progress bar + time display -->
+        <div class="progress-wrapper">
+          <span id="current-time">0:00</span>
+          <div class="progress-container">
+            <div id="progress"></div>
+          </div>
+          <span id="duration">0:00</span>
+        </div>
+
+      <div class="controls">
+        <button id="prev">⏮</button>
+        <button id="play">▶️</button>
+        <button id="next">⏭</button>
+      </div>
+    </section>
+
+    <section class="playlist">
+      <h3>🎵 Playlist</h3>
+      <ul id="song-list">
+        <!-- Songs will be loaded here automatically -->
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 EchoBeats | ASMZIC</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
