@@ -179,7 +179,6 @@ songs.forEach((song, index) => {
     li.classList.add("active");
   });
   songList.appendChild(li);
-});
 
 // 7️⃣ Theme toggle (dark/light)
 themeToggle.addEventListener("click", () => {
