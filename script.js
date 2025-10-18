@@ -44,7 +44,6 @@ const songs = [
   }
 ];
 
-
 // 2️⃣ Grab all HTML elements
 const audio = document.getElementById("audio");
 const title = document.getElementById("song-title");
@@ -59,7 +58,12 @@ const progress = document.getElementById("progress");
 const currentTimeEl = document.getElementById("current-time");
 const durationEl = document.getElementById("duration");
 
-// Format seconds to hh:mm:ss or mm:ss
+let currentSong = 0;
+let isPlaying = false;
+let queue = [];
+let queueStartedFrom = null; // Tracks first song before queue starts
+
+// 3️⃣ Format seconds to hh:mm:ss or mm:ss
 function formatTime(sec) {
   const hours = Math.floor(sec / 3600);
   const minutes = Math.floor((sec % 3600) / 60);
@@ -72,64 +76,41 @@ function formatTime(sec) {
   }
 }
 
-// Update progress bar and times
-audio.addEventListener("timeupdate", () => {
-  const percent = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = percent + "%";
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-  durationEl.textContent = formatTime(audio.duration);
-});
-
-// Click on progress bar to seek
-progressContainer.addEventListener("click", (e) => {
-  const width = progressContainer.clientWidth;
-  const clickX = e.offsetX;
-  const duration = audio.duration;
-
-  audio.currentTime = (clickX / width) * duration;
-});
-
-let currentSong = 0;
-let isPlaying = false;
-let queue = [];
-updateQueueDisplay();
-
-// 3️⃣ Load a song into the player
+// 4️⃣ Load a song into the player
 function loadSong(song) {
   title.textContent = song.title;
   cover.src = song.cover;
   audio.src = song.src;
+  updateActivePlaylist();
 }
 
-// 4️⃣ Play and pause functions
+// 5️⃣ Play and pause functions
 function playSong() {
   isPlaying = true;
-  playBtn.textContent = "⏸"; 
+  playBtn.textContent = "⏸";
   audio.play();
-  cover.classList.add("playing", "pulse"); // Start animations
+  cover.classList.add("playing", "pulse");
 }
 
 function pauseSong() {
   isPlaying = false;
-  playBtn.textContent = "▶️"; 
+  playBtn.textContent = "▶️";
   audio.pause();
-  cover.classList.remove("playing", "pulse"); // Stop animations
+  cover.classList.remove("playing", "pulse");
 }
 
-// Autoplay next song
-audio.addEventListener("ended", nextSong);
-
-// Toggle play/pause
-playBtn.addEventListener("click", () => {
-  isPlaying ? pauseSong() : playSong();
-});
-
-// 5️⃣ Next and previous song
+// 6️⃣ Next and previous song
 function nextSong() {
-  if(queue.length > 0){
+  if (queue.length > 0) {
     currentSong = queue.shift();
+    if(queueStartedFrom === null) queueStartedFrom = currentSong;
   } else {
-    currentSong = (currentSong + 1) % songs.length;
+    if(queueStartedFrom !== null && currentSong === queueStartedFrom - 1) {
+      currentSong = (currentSong + 1) % songs.length;
+      queueStartedFrom = null; // Reset queue tracking
+    } else {
+      currentSong = (currentSong + 1) % songs.length;
+    }
   }
   loadSong(songs[currentSong]);
   playSong();
@@ -142,26 +123,53 @@ function prevSong() {
   if (isPlaying) audio.play();
 }
 
+// 7️⃣ Update progress bar and times
+audio.addEventListener("timeupdate", () => {
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+// Click on progress bar to seek
+progressContainer.addEventListener("click", (e) => {
+  const width = progressContainer.clientWidth;
+  const clickX = e.offsetX;
+  audio.currentTime = (clickX / width) * audio.duration;
+});
+
+// Autoplay next song
+audio.addEventListener("ended", nextSong);
+
+// 8️⃣ Toggle play/pause
+playBtn.addEventListener("click", () => {
+  isPlaying ? pauseSong() : playSong();
+});
+
 nextBtn.addEventListener("click", nextSong);
 prevBtn.addEventListener("click", prevSong);
 
-// 6️⃣ Auto-generate playlist in HTML
+// 9️⃣ Generate playlist in HTML
 songs.forEach((song, index) => {
   const li = document.createElement("li");
   li.textContent = song.title;
   li.addEventListener("click", () => {
-  if(isPlaying){
-    queue.push(index); // add to queue if already playing
-  } else {
-    currentSong = index;
-    loadSong(songs[currentSong]);
-    playSong();
-  }
+    if (isPlaying) {
+      queue.push(index); // Add to queue if a song is playing
+    } else {
+      currentSong = index;
+      loadSong(songs[currentSong]);
+      playSong();
+    }
+    updateQueueDisplay();
+  });
+  songList.appendChild(li);
 });
 
-    function updateQueueDisplay(){
+// 1️⃣0️⃣ Update queue display
+function updateQueueDisplay() {
   const queueList = document.getElementById("queue-list");
-  if(!queueList) return;
+  if (!queueList) return;
   queueList.innerHTML = "";
   queue.forEach((idx, i) => {
     const li = document.createElement("li");
@@ -174,17 +182,19 @@ songs.forEach((song, index) => {
   });
 }
 
-     // Animate active playlist item
-    document.querySelectorAll("#song-list li").forEach(li => li.classList.remove("active"));
-    li.classList.add("active");
+// 1️⃣1️⃣ Highlight active playlist item
+function updateActivePlaylist() {
+  document.querySelectorAll("#song-list li").forEach((li, idx) => {
+    li.classList.toggle("active", idx === currentSong);
   });
-  songList.appendChild(li);
+}
 
-// 7️⃣ Theme toggle (dark/light)
+// 1️⃣2️⃣ Theme toggle (dark/light)
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("light");
   themeToggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
 });
 
-// 8️⃣ Load the first song on page load
+// 1️⃣3️⃣ Load first song on page load
 loadSong(songs[currentSong]);
+updateQueueDisplay();
