@@ -183,13 +183,14 @@ footer {
 }
 
 /* Animations for cover */
+/* Gentle pop effect for playing cover */
 .player img.playing {
-  animation: popWobble 2s ease-in-out infinite;
+  animation: softPop 1.5s ease-in-out infinite;
 }
 
-@keyframes popWobble {
+@keyframes softPop {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05) rotate(-2deg);}
+  50% { transform: scale(1.03); } /* small gentle pop */
 }
 
 @keyframes pulseCover {
