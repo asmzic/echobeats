@@ -185,7 +185,7 @@ footer {
 /* Animations for cover */
 /* Gentle pop effect for playing cover */
 .player img.playing {
-  animation: softPop 1.5s ease-in-out infinite;
+  animation: softPop 2.5s ease-in-out infinite;
 }
 
 @keyframes softPop {
