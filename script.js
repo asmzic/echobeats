@@ -92,6 +92,7 @@ progressContainer.addEventListener("click", (e) => {
 let currentSong = 0;
 let isPlaying = false;
 let queue = [];
+updateQueueDisplay();
 
 // 3️⃣ Load a song into the player
 function loadSong(song) {
@@ -156,7 +157,6 @@ songs.forEach((song, index) => {
     loadSong(songs[currentSong]);
     playSong();
   }
-  updateQueueDisplay();
 });
 
     function updateQueueDisplay(){
