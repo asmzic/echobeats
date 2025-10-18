@@ -91,6 +91,7 @@ progressContainer.addEventListener("click", (e) => {
 
 let currentSong = 0;
 let isPlaying = false;
+let queue = [];
 
 // 3️⃣ Load a song into the player
 function loadSong(song) {
@@ -114,11 +115,8 @@ function pauseSong() {
   cover.classList.remove("playing", "pulse"); // Stop animations
 }
 
-//Auto-Stop when song ends
-audio.addEventListener("ended", () => {
-  pauseSong();
-});
-
+// Autoplay next song
+audio.addEventListener("ended", nextSong);
 
 // Toggle play/pause
 playBtn.addEventListener("click", () => {
@@ -127,9 +125,14 @@ playBtn.addEventListener("click", () => {
 
 // 5️⃣ Next and previous song
 function nextSong() {
-  currentSong = (currentSong + 1) % songs.length;
+  if(queue.length > 0){
+    currentSong = queue.shift();
+  } else {
+    currentSong = (currentSong + 1) % songs.length;
+  }
   loadSong(songs[currentSong]);
-  if (isPlaying) audio.play();
+  playSong();
+  updateQueueDisplay();
 }
 
 function prevSong() {
@@ -146,10 +149,31 @@ songs.forEach((song, index) => {
   const li = document.createElement("li");
   li.textContent = song.title;
   li.addEventListener("click", () => {
+  if(isPlaying){
+    queue.push(index); // add to queue if already playing
+  } else {
     currentSong = index;
-    loadSong(song);
+    loadSong(songs[currentSong]);
     playSong();
-    
+  }
+  updateQueueDisplay();
+});
+
+    function updateQueueDisplay(){
+  const queueList = document.getElementById("queue-list");
+  if(!queueList) return;
+  queueList.innerHTML = "";
+  queue.forEach((idx, i) => {
+    const li = document.createElement("li");
+    li.textContent = songs[idx].title;
+    li.addEventListener("click", () => {
+      queue.splice(i, 1);
+      updateQueueDisplay();
+    });
+    queueList.appendChild(li);
+  });
+}
+
      // Animate active playlist item
     document.querySelectorAll("#song-list li").forEach(li => li.classList.remove("active"));
     li.classList.add("active");
