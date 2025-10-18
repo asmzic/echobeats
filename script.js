@@ -59,11 +59,17 @@ const progress = document.getElementById("progress");
 const currentTimeEl = document.getElementById("current-time");
 const durationEl = document.getElementById("duration");
 
-// Format seconds to mm:ss
+// Format seconds to hh:mm:ss or mm:ss
 function formatTime(sec) {
-  const minutes = Math.floor(sec / 60);
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
   const seconds = Math.floor(sec % 60);
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+  if (hours > 0) {
+    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  } else {
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  }
 }
 
 // Update progress bar and times
