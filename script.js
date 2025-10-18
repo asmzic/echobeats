@@ -29,6 +29,18 @@ const songs = [
     artist: "Anirudh Ravichander & Various Artists",
     src: "songs/Anirudh-Mass-Playlist.mp3",
     cover: "images/default-cover.jpg",
+  },
+  {
+    title: "Chaleya x Khudaya Ishq",
+    artist: "Anirudh Ravichander, Amit Trivedi & Various Artists",
+    src: "songs/chaleya-x-khudaya-ishq.mp3",
+    cover: "images/default-cover.jpg",
+  },
+  {
+    title: "Dahaa Extended BGM",
+    artist: "Anirudh Ravichander, ASMZIC",
+    src: "songs/coolie-dahaa-bgm.mp3",
+    cover: "images/default-cover.jpg",
   }
 ];
 
