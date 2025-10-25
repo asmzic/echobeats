@@ -249,3 +249,9 @@ footer {
   color: #fff;
   transform: scale(1.03);
 }
+
+.playlist li:hover {
+  background-color: rgba(94, 184, 255, 0.3);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 4px 15px rgba(94, 184, 255, 0.3);
+}
