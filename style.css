@@ -4,8 +4,6 @@
   --bg-gradient-light: linear-gradient(135deg, #e0f0ff, #ffffff);
   --text-color: #f2f2f2;
   --accent-color: #5eb8ff;
-  --glow-color: rgba(94,184,255,0.6);
-  --player-glow: 0 0 20px rgba(94,184,255,0.6);
 }
 
 /* 🌞 Light theme override */
@@ -13,8 +11,6 @@ body.light {
   --bg-gradient-dark: var(--bg-gradient-light);
   --text-color: #0d0d0d;
   --accent-color: #007bff;
-  --glow-color: rgba(0,123,255,0.6);
-  --player-glow: 0 0 20px rgba(0,123,255,0.6);
 }
 
 body {
@@ -26,100 +22,46 @@ body {
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
+  overflow-y:auto;
   transition: all 0.3s ease;
-  perspective: 1000px; /* For 3D tilt effect */
+  perspective: 1000px; /* For parallax depth */
 }
 
-/* Player glass + glow */
-.player {
-  text-align: center;
-  margin: 2rem auto;
-  padding: 2rem;
-  width: 300px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(25px);
-  border-radius: 20px;
-  box-shadow: var(--player-glow);
-  z-index: 2;
-  position: relative;
-  transition: all 0.3s ease;
+/* Parallax Layers */
+.parallax-layer {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  top: -5%;
+  left: -5%;
+  pointer-events: none;
+  z-index: -1;
+}
+.layer1 { background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 80%); }
+.layer2 { background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 70%); }
+
+/* Particle Canvas */
+#particle-canvas {
+  position: absolute;
+  top:0; left:0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.player img {
-  width: 250px;
-  height: 250px;
-  border-radius: 15px;
-  box-shadow: var(--player-glow);
-  transition: all 0.4s ease, transform 0.4s ease;
+/* Spectrum Canvas */
+#spectrum-canvas {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.player img.playing {
-  animation: softPop 3.5s ease-in-out infinite, glowPulse 2s ease-in-out infinite;
-}
-
-@keyframes softPop {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-}
-
-@keyframes glowPulse {
-  0%,100% { box-shadow: var(--player-glow); }
-  50% { box-shadow: 0 0 35px rgba(94,184,255,0.8); }
-}
-
-/* Controls glow */
-.controls button {
-  background-color: var(--accent-color);
-  border: none;
-  border-radius: 50%;
-  padding: 0.7rem 1rem;
-  margin: 0 0.4rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #fff;
-  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-}
-
-.controls button:hover {
-  transform: scale(1.15) rotate(-5deg);
-  box-shadow: 0 0 20px var(--glow-color);
-}
-
-/* Playlist with glow + hover */
-.playlist li {
-  padding: 0.5rem;
-  cursor: pointer;
-  border-radius: 10px;
-  margin: 0.3rem 0;
-  background: rgba(255,255,255,0.05);
-  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-}
-
-.playlist li.active,
-.playlist li:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 0 15px var(--glow-color);
-  background-color: rgba(94,184,255,0.3);
-}
-
-/* Header floating + parallax */
-header {
-  text-align: center;
-  padding: 1rem;
-  position: relative;
-  z-index: 2;
-  transform-style: preserve-3d;
-}
-
-/* Progress bar neon glow */
-#progress {
-  height: 6px;
-  background: linear-gradient(90deg, #5eb8ff, #00e0ff);
-  border-radius: 5px;
-  box-shadow: 0 0 10px var(--glow-color);
-}
-
-/* Ribbons animation enhanced */
+/* Floating ribbons */
 .ribbon {
   position: absolute;
   width: 200%;
@@ -132,11 +74,151 @@ header {
 }
 
 @keyframes shimmer {
-  0%,100% { opacity: 0.5; }
+  0%, 100% { opacity: 0.5; }
   50% { opacity: 0.7; }
 }
 
 @keyframes moveRibbon {
-  0% { transform: translate(-20%,-20%) rotate(0deg); }
-  100% { transform: translate(20%,20%) rotate(15deg); }
+  0% { transform: translate(-20%, -20%) rotate(0deg); }
+  100% { transform: translate(20%, 20%) rotate(15deg); }
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease;
+}
+
+header h1 { margin:0; }
+header p { margin:0; font-size:0.9rem; opacity:0.7; }
+
+/* Theme Toggle */
+#theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index:2;
+}
+
+/* Player (Glass + Glow) */
+.player {
+  text-align: center;
+  margin: 2rem auto;
+  padding: 2rem;
+  width: 300px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(94,184,255,0.2);
+  z-index:2;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease;
+}
+
+.player img {
+  width: 250px;
+  height: 250px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,123,255,0.4);
+  transition: all 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.player img.playing {
+  animation: softPop 3.5s ease-in-out infinite;
+}
+
+@keyframes softPop {
+  0%,100%{ transform: scale(1); }
+  50%{ transform: scale(1.03); }
+}
+
+.controls button {
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 50%;
+  padding: 0.7rem 1rem;
+  margin: 0 0.4rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #fff;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.controls button:hover {
+  box-shadow: 0 0 15px rgba(94,184,255,0.6);
+}
+
+/* Progress bar */
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  margin: 1rem auto;
+  gap: 0.5rem;
+}
+
+.progress-container {
+  flex: 1;
+  height: 6px;
+  background-color: rgba(255,255,255,0.2);
+  border-radius:5px;
+  cursor:pointer;
+}
+#progress {
+  width:0%;
+  height:100%;
+  background-color: var(--accent-color);
+  border-radius:5px;
+  transition: width 0.2s;
+}
+
+/* Playlist & Queue */
+.playlist, .queue {
+  width:80%;
+  margin:2rem auto;
+  z-index:2;
+  position:relative;
+}
+.playlist li, #queue-list li {
+  padding:0.5rem;
+  cursor:pointer;
+  border-radius:10px;
+  margin:0.3rem 0;
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s;
+}
+.playlist li:hover, #queue-list li:hover {
+  background-color: rgba(94,184,255,0.3);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 4px 15px rgba(94,184,255,0.3);
+}
+.playlist li.active {
+  animation: popItem 0.3s ease-in-out forwards;
+}
+@keyframes popItem {
+  0%   { transform: scale(1); background-color: rgba(94,184,255,0.2);}
+  50%  { transform: scale(1.05); background-color: rgba(94,184,255,0.35);}
+  100% { transform: scale(1); background-color: rgba(94,184,255,0.2);}
+}
+
+/* Footer */
+footer {
+  margin-top:auto;
+  padding:1rem;
+  text-align:center;
+  font-size:0.8rem;
+  opacity:0.7;
+  z-index:2;
+  position:relative;
 }
