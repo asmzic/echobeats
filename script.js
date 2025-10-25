@@ -70,6 +70,26 @@ function nextSong() {
   updateQueueDisplay(); // Update queue list visually
 }
 
+// 1️⃣0️⃣ Update queue display
+function updateQueueDisplay() {
+  const queueList = document.getElementById("queue-list");
+  if (!queueList) return;
+  queueList.innerHTML = ""; // Clear previous queue
+
+  queue.forEach((idx, i) => {
+    const li = document.createElement("li");
+    li.textContent = songs[idx].title;
+    
+    // Clicking on a queue item removes it from queue
+    li.addEventListener("click", () => {
+      queue.splice(i, 1);
+      updateQueueDisplay();
+    });
+    
+    queueList.appendChild(li);
+  });
+}
+
 function prevSong(){
   currentSong = (currentSong-1+songs.length)%songs.length;
   loadSong(songs[currentSong]);
@@ -119,26 +139,6 @@ function formatTime(sec) {
   } else {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   }
-}
-
-// 1️⃣0️⃣ Update queue display
-function updateQueueDisplay() {
-  const queueList = document.getElementById("queue-list");
-  if (!queueList) return;
-  queueList.innerHTML = ""; // Clear previous queue
-
-  queue.forEach((idx, i) => {
-    const li = document.createElement("li");
-    li.textContent = songs[idx].title;
-    
-    // Clicking on a queue item removes it from queue
-    li.addEventListener("click", () => {
-      queue.splice(i, 1);
-      updateQueueDisplay();
-    });
-    
-    queueList.appendChild(li);
-  });
 }
 
 // === 9️⃣ Controls ===
