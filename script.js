@@ -1,12 +1,12 @@
 // === 1️⃣ Playlist ===
 const songs = [
-  { title:"Sooiyan", artist:"Arijit Singh", src:"songs/Sooiyan.mp3", cover:"images/default-cover.jpg"},
-  { title:"O Rangrez", artist:"Shankar-Ehsaan-Loy", src:"songs/O-Rangrez.mp3", cover:"images/default-cover.jpg"},
-  { title:"Samjhawan", artist:"Sharib Toshi", src:"songs/Samjhawan.mp3", cover:"images/default-cover.jpg"},
-  { title:"Once Upon A Time", artist:"Anirudh Ravichander", src:"songs/Number-1-x-Once-Upon-A-Time.mp3", cover:"images/default-cover.jpg"},
-  { title:"Anirudh Mass", artist:"Anirudh Ravichander", src:"songs/Anirudh-Mass-Playlist.mp3", cover:"images/default-cover.jpg"},
+  { title:"Sooiyan(from 'Guddu Rangeela')", artist:"Arijit Singh", src:"songs/Sooiyan-(Reverbed-and-Amplified).mp3", cover:"images/default-cover.jpg"},
+  { title:"O Rangrez", artist:"Shankar-Ehsaan-Loy", src:"songs/O-Rangrez-(Lofi-Slowed-Reverb).mp3", cover:"images/default-cover.jpg"},
+  { title:"Samjhawan", artist:"Sharib Toshi", src:"songs/Samjhawan-[Slowed-Reverb].mp3", cover:"images/default-cover.jpg"},
+  { title:"Once Upon A Time x Number 1", artist:"Anirudh Ravichander", src:"songs/Number-1-x-Once-Upon-A-Time.mp3", cover:"images/default-cover.jpg"},
+  { title:"Anirudh Mass Playlist", artist:"Anirudh Ravichander", src:"songs/Anirudh-Mass-Playlist.mp3", cover:"images/default-cover.jpg"},
   { title:"Chaleya x Khudaya Ishq", artist:"Anirudh Ravichander", src:"songs/chaleya-x-khudaya-ishq.mp3", cover:"images/default-cover.jpg"},
-  { title:"Dahaa BGM", artist:"Anirudh Ravichander", src:"songs/coolie-dahaa-bgm.mp3", cover:"images/default-cover.jpg"}
+  { title:"Dahaa Extended BGM", artist:"Anirudh Ravichander", src:"songs/coolie-dahaa-bgm.mp3", cover:"images/default-cover.jpg"}
 ];
 
 // === 2️⃣ Grab HTML elements ===
@@ -59,11 +59,17 @@ function playSong(){ isPlaying = true; playBtn.textContent = "⏸"; audio.play()
 function pauseSong(){ isPlaying = false; playBtn.textContent = "▶️"; audio.pause(); cover.classList.remove("playing"); }
 
 // === 5️⃣ Next / Prev ===
-function nextSong(){
-  currentSong = (currentSong+1)%songs.length;
+function nextSong() {
+  if (queue.length > 0) {
+    currentSong = queue.shift(); // Take first song in queue
+  } else {
+    currentSong = (currentSong + 1) % songs.length;
+  }
   loadSong(songs[currentSong]);
   playSong();
+  updateQueueDisplay(); // Update queue list visually
 }
+
 function prevSong(){
   currentSong = (currentSong-1+songs.length)%songs.length;
   loadSong(songs[currentSong]);
@@ -103,10 +109,36 @@ progressContainer.addEventListener("click",(e)=>{
   audio.currentTime = (clickX / width) * audio.duration;
 });
 
-function formatTime(sec){
-  const minutes = Math.floor(sec/60);
-  const seconds = Math.floor(sec%60);
-  return `${minutes}:${seconds<10?"0":""}${seconds}`;
+function formatTime(sec) {
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
+  const seconds = Math.floor(sec % 60);
+
+  if (hours > 0) {
+    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  } else {
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  }
+}
+
+// 1️⃣0️⃣ Update queue display
+function updateQueueDisplay() {
+  const queueList = document.getElementById("queue-list");
+  if (!queueList) return;
+  queueList.innerHTML = ""; // Clear previous queue
+
+  queue.forEach((idx, i) => {
+    const li = document.createElement("li");
+    li.textContent = songs[idx].title;
+    
+    // Clicking on a queue item removes it from queue
+    li.addEventListener("click", () => {
+      queue.splice(i, 1);
+      updateQueueDisplay();
+    });
+    
+    queueList.appendChild(li);
+  });
 }
 
 // === 9️⃣ Controls ===
@@ -124,12 +156,25 @@ themeToggle.addEventListener("click", ()=>{
 loadSong(songs[currentSong]);
 
 // === 1️⃣2️⃣ 3D Parallax ===
-document.addEventListener("mousemove", (e)=>{
-  const x = (window.innerWidth/2 - e.clientX)/50;
-  const y = (window.innerHeight/2 - e.clientY)/50;
-  document.querySelector("header").style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-  document.querySelector(".player").style.transform = `rotateY(${x/2}deg) rotateX(${y/2}deg)`;
-  document.querySelector(".playlist").style.transform = `rotateY(${x/3}deg) rotateX(${y/3}deg)`;
+document.addEventListener("mousemove", (e) => {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  const deltaX = e.clientX - centerX;
+  const deltaY = e.clientY - centerY;
+
+  const threshold = 200; // only move if cursor near center
+  if (Math.abs(deltaX) < threshold && Math.abs(deltaY) < threshold) {
+    const x = (centerX - e.clientX) / 200; // smaller divisor => smaller movement
+    const y = (centerY - e.clientY) / 200;
+    document.querySelector("header").style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    document.querySelector(".player").style.transform = `rotateY(${x/2}deg) rotateX(${y/2}deg)`;
+    document.querySelector(".playlist").style.transform = `rotateY(${x/3}deg) rotateX(${y/3}deg)`;
+  } else {
+    document.querySelector("header").style.transform = `rotateY(0deg) rotateX(0deg)`;
+    document.querySelector(".player").style.transform = `rotateY(0deg) rotateX(0deg)`;
+    document.querySelector(".playlist").style.transform = `rotateY(0deg) rotateX(0deg)`;
+  }
 });
 
 // === 1️⃣3️⃣ Particles ===
@@ -163,16 +208,26 @@ analyser.fftSize = 256;
 const bufferLength = analyser.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
 
-function drawSpectrum(){
+function resizeSpectrumCanvas() {
+  spectrumCanvas.width = window.innerWidth;
+  spectrumCanvas.height = window.innerWidth < 768 ? 80 : 120; // smaller height for mobile
+}
+window.addEventListener("resize", resizeSpectrumCanvas);
+resizeSpectrumCanvas(); // call once on load
+
+function drawSpectrum() {
   requestAnimationFrame(drawSpectrum);
-  sCtx.clearRect(0,0,spectrumCanvas.width,spectrumCanvas.height);
+  sCtx.clearRect(0, 0, spectrumCanvas.width, spectrumCanvas.height);
   analyser.getByteFrequencyData(dataArray);
-  const barWidth = (spectrumCanvas.width / bufferLength) * 2.5;
+
+  const barWidth = (spectrumCanvas.width / bufferLength) * (window.innerWidth < 768 ? 1.5 : 2.5);
+  const maxBarHeight = window.innerWidth < 768 ? 40 : 60;
   let x = 0;
-  for(let i=0;i<bufferLength;i++){
-    const barHeight = dataArray[i]/2;
+
+  for (let i = 0; i < bufferLength; i++) {
+    const barHeight = (dataArray[i] / 255) * maxBarHeight;
     sCtx.fillStyle = "rgba(94,184,255,0.8)";
-    sCtx.fillRect(x, spectrumCanvas.height-barHeight, barWidth, barHeight);
+    sCtx.fillRect(x, spectrumCanvas.height - barHeight, barWidth, barHeight);
     x += barWidth + 1;
   }
 }
