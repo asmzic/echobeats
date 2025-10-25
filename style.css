@@ -34,9 +34,14 @@ body {
   height: 200%;
   background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%);
   filter: blur(40px);
-  animation: moveRibbon 20s linear infinite alternate;
+  animation: moveRibbon 20s linear infinite alternate, shimmer 3s ease-in-out infinite;
   z-index: 0;
   opacity: 0.6;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.7; }
 }
 
 @keyframes moveRibbon {
@@ -50,6 +55,12 @@ header {
   padding: 1rem;
   position: relative;
   z-index: 2;
+  animation: floatHeader 6s ease-in-iut infinite;
+}
+
+@keyframes floatHeader {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px);}
 }
 
 header h1 {
@@ -97,6 +108,11 @@ header p {
   transition: all 0.4s ease;
 }
 
+.player img:hover {
+  transform: roatateY(8deg) rotateX(4deg) scale(1.04);
+  transform: transform 0.3s ease;
+}
+
 .controls {
   margin-top: 1rem;
 }
@@ -114,8 +130,7 @@ header p {
 }
 
 .controls button:hover {
-  transform: scale(1.15) rotate(-5deg);
-  background-color: #99d4ff;
+  box-shadow: 0 0 15px rgba(94, 184, 255, 0.6);
 }
 
 /* Progress bar */
@@ -238,10 +253,8 @@ footer {
 #queue-list li:nth-child(3) { animation-delay: 0.3s; }
 
 @keyframes fadeInQueue {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0%   { opacity: 0; transform: translateY(15px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 #queue-list li:hover {
