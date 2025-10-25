@@ -104,14 +104,23 @@ function updateActivePlaylist(){
 }
 
 // === 7️⃣ Generate Playlist HTML ===
-songs.forEach((song,i)=>{
+songs.forEach((song, index) => {
   const li = document.createElement("li");
   li.textContent = song.title;
-  li.addEventListener("click", ()=>{
-    currentSong=i;
-    loadSong(songs[i]);
-    playSong();
+
+  li.addEventListener("click", () => {
+    if (isPlaying) {
+      // Song is playing, so add to queue instead of playing immediately
+      queue.push(index);
+    } else {
+      // No song playing, play this song immediately
+      currentSong = index;
+      loadSong(songs[currentSong]);
+      playSong();
+    }
+    updateQueueDisplay(); // Always refresh queue
   });
+
   songList.appendChild(li);
 });
 
