@@ -4,86 +4,77 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EchoBeats | A Sound World by ASMZIC</title>
-<!-- 🌐 Social Media Meta Preview -->
-<meta name="title" content="EchoBeats | A Sound World by ASMZIC">
-<meta name="description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
-<meta name="keywords" content="Lofi, Arijit Singh, Reverb, Acoustic, ASMZIC">
 
-<!-- Author & Language -->
-<meta name="author" content="ASMZIC">
-<meta name="language" content="en">
+  <!-- SEO & Social Media Meta -->
+  <meta name="title" content="EchoBeats | A Sound World by ASMZIC">
+  <meta name="description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
+  <meta name="author" content="ASMZIC">
+  <meta name="robots" content="index, follow">
 
-<!-- Search Engine Instructions -->
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://asmzic.github.io/echobeats/">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://asmzic.github.io/echobeats/">
+  <meta property="og:title" content="EchoBeats | A Sound World by ASMZIC">
+  <meta property="og:description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
+  <meta property="og:image" content="https://asmzic.github.io/echobeats/images/default-cover.jpg">
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://asmzic.github.io/echobeats/">
-<meta property="og:title" content="EchoBeats | A Sound World by ASMZIC">
-<meta property="og:description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
-<meta property="og:image" content="https://asmzic.github.io/echobeats/images/default-cover.jpg">
-<meta property="og:site_name" content="EchoBeats">
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://asmzic.github.io/echobeats/">
+  <meta name="twitter:title" content="EchoBeats | A Sound World by ASMZIC">
+  <meta name="twitter:description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
+  <meta name="twitter:image" content="https://asmzic.github.io/echobeats/images/default-cover.jpg">
 
-<!-- Twitter / X -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://asmzic.github.io/echobeats/">
-<meta name="twitter:title" content="EchoBeats | A Sound World by ASMZIC">
-<meta name="twitter:description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
-<meta name="twitter:image" content="https://asmzic.github.io/echobeats/images/default-cover.jpg">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JV6KLJ1ZM9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JV6KLJ1ZM9');
+  </script>
 
-<!-- Extra SEO-friendly keywords -->
-<meta name="keywords" content="Lofi, Reverb, Acoustic, Arijit Singh, Anirudh Ravichander, Music, Remastered, ASMZIC, Music Player, Online Music">
-
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://asmzic.github.io/echobeats/">
-<meta property="og:title" content="EchoBeats | A Sound World by ASMZIC">
-<meta property="og:description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
-<meta property="og:image" content="https://asmzic.github.io/echobeats/images/default-cover.jpg">
-
-<!-- Twitter / X -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://asmzic.github.io/echobeats/">
-<meta name="twitter:title" content="EchoBeats | A Sound World by ASMZIC">
-<meta name="twitter:description" content="Immerse yourself in the world of sound by ASMZIC — remastered Lofi, Reverb, and Acoustic tracks with a touch of emotion.">
-<meta name="twitter:image" content="https://asmzic.github.io/echobeats/images/default-cover.jpg">
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JV6KLJ1ZM9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JV6KLJ1ZM9');
-</script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Particle and audio spectrum canvases -->
+  <canvas id="particle-canvas"></canvas>
+  <canvas id="spectrum-canvas"></canvas>
+
+  <!-- Parallax layers for 3D depth effect -->
+  <div class="parallax-layer layer1"></div>
+  <div class="parallax-layer layer2"></div>
+  <div class="parallax-layer layer3"></div>
+
+  <!-- Floating ribbon -->
   <div class="ribbon"></div>
+
+  <!-- Header -->
   <header>
     <h1>🎧 EchoBeats</h1>
     <p>A Sound World by ASMZIC</p>
     <button id="theme-toggle">🌙</button>
   </header>
 
+  <!-- Main Player Section -->
   <main>
     <section class="player">
       <img id="cover" src="images/default-cover.jpg" alt="Album cover" />
       <h2 id="song-title">No song playing</h2>
-      <!-- Audio engine -->
-       <audio id="audio"></audio>
-       
-       <!-- Progress bar + time display -->
-        <div class="progress-wrapper">
-          <span id="current-time">0:00</span>
-          <div class="progress-container">
-            <div id="progress"></div>
-          </div>
-          <span id="duration">0:00</span>
-        </div>
 
+      <!-- Audio engine -->
+      <audio id="audio"></audio>
+
+      <!-- Progress bar + time -->
+      <div class="progress-wrapper">
+        <span id="current-time">0:00</span>
+        <div class="progress-container">
+          <div id="progress"></div>
+        </div>
+        <span id="duration">0:00</span>
+      </div>
+
+      <!-- Controls -->
       <div class="controls">
         <button id="prev">⏮</button>
         <button id="play">▶️</button>
@@ -91,23 +82,27 @@
       </div>
     </section>
 
+    <!-- Playlist -->
     <section class="playlist">
       <h3>🎵 Playlist</h3>
       <ul id="song-list">
-        <!-- Songs will be loaded here automatically -->
+        <!-- Songs will be loaded dynamically -->
       </ul>
     </section>
   </main>
 
+  <!-- Queue Section -->
   <section class="queue">
     <h3>🎶 Up Next</h3>
     <ul id="queue-list"></ul>
   </section>
 
+  <!-- Footer -->
   <footer>
     <p>© 2025 EchoBeats | ASMZIC</p>
   </footer>
 
+  <!-- JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
