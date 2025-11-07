@@ -96,6 +96,77 @@ function prevSong(){
   if(isPlaying) audio.play();
 }
 
+// ✅ Volume Controls (Add near top after defining audio)
+const volumeSlider = document.getElementById("volume-slider");
+const muteBtn = document.getElementById("mute-btn");
+let isMuted = false;
+
+// Initial Volume
+audio.volume = 0.8;
+
+// 🎚️ Volume Control Events
+if (volumeSlider) {
+  volumeSlider.addEventListener("input", (e) => {
+    const vol = e.target.value / 100;
+    audio.volume = vol;
+    if (audio.volume > 0) {
+      isMuted = false;
+      muteBtn.textContent = "🔊";
+      audio.muted = false;
+    }
+  });
+}
+
+if (muteBtn) {
+  muteBtn.addEventListener("click", () => {
+    isMuted = !isMuted;
+    audio.muted = isMuted;
+    muteBtn.textContent = isMuted ? "🔇" : "🔊";
+  });
+}
+
+// ✅ Queue + Auto Next Fix
+audio.addEventListener("ended", () => {
+  // If queue has songs, play next queued one
+  if (queue && queue.length > 0) {
+    const nextQueuedIndex = queue.shift();
+    renderQueue();
+    currentSongIndex = nextQueuedIndex;
+    loadSong(currentSongIndex);
+    playSong();
+  } else {
+    // Else play next song in playlist
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadSong(currentSongIndex);
+    playSong();
+  }
+});
+
+// ✅ When song clicked
+function handleSongClick(index) {
+  if (isPlaying && currentSongIndex !== index) {
+    // If a song is playing, add to queue instead of interrupting
+    queue.push(index);
+    renderQueue();
+  } else {
+    // If nothing is playing, play it directly
+    currentSongIndex = index;
+    loadSong(currentSongIndex);
+    playSong();
+  }
+}
+
+// ✅ Render Queue Function (if missing)
+function renderQueue() {
+  if (!queueListEl) return;
+  queueListEl.innerHTML = "";
+  queue.forEach((qIndex) => {
+    const li = document.createElement("li");
+    li.textContent = songs[qIndex].title;
+    queueListEl.appendChild(li);
+  });
+}
+
 // === 6️⃣ Playlist Highlight ===
 function updateActivePlaylist(){
   document.querySelectorAll("#song-list li").forEach((li, idx) => {

@@ -27,6 +27,19 @@ body {
   perspective: 1000px; /* For parallax depth */
 }
 
+.volume-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+#volume-slider {
+  width: 90px;
+  accent-color: var(--accent-color);
+}
+
 /* Parallax Layers */
 .parallax-layer {
   position: absolute;
