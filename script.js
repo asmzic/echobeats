@@ -334,3 +334,24 @@ audio.addEventListener("play", ()=>{
   audioCtx.resume();
   drawSpectrum();
 });
+
+// 🎧 Volume Popup Smart Hover
+const volumeWrapper = document.querySelector('.volume-wrapper');
+const volumePopup = document.querySelector('.volume-popup');
+
+let popupTimeout;
+
+volumeWrapper.addEventListener('mouseenter', () => {
+  clearTimeout(popupTimeout);
+  volumePopup.style.opacity = '1';
+  volumePopup.style.transform = 'translateX(-50%) scale(1)';
+  volumePopup.style.pointerEvents = 'auto';
+});
+
+volumeWrapper.addEventListener('mouseleave', () => {
+  popupTimeout = setTimeout(() => {
+    volumePopup.style.opacity = '0';
+    volumePopup.style.transform = 'translateX(-50%) scale(0.9)';
+    volumePopup.style.pointerEvents = 'none';
+  }, 400); // 👈 stays visible for 0.4 seconds before closing
+});
