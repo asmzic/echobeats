@@ -75,7 +75,8 @@ body {
 
 /* Volume slider (vertical look) */
 #volume-slider {
-  appearance: slider-vertical;
+  writing-mode: bt-lr;
+  appearance: none;
   width: 6px;
   height: 80px;
   cursor: pointer;
@@ -83,6 +84,7 @@ body {
   border-radius: 4px;
   accent-color: var(--accent-color);
 }
+
 
 /* Value display */
 #volume-value {
