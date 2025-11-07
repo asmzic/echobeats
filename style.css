@@ -38,7 +38,7 @@ body {
   background: none;
   border: none;
   color: var(--text-color);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   cursor: pointer;
   transition: transform 0.2s, color 0.3s;
 }
@@ -51,45 +51,58 @@ body {
 /* Hidden popup (volume bar + value) */
 .volume-popup {
   position: absolute;
-  bottom: 130%;
+  bottom: 150%;
   left: 50%;
-  transform: translateX(-50%) scale(0);
+  transform: translateX(-50%) scale(0.9);
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border-radius: 12px;
-  padding: 0.6rem 0.8rem;
+  padding: 0.5rem 0.8rem;
   box-shadow: 0 0 10px rgba(94,184,255,0.4);
   text-align: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: all 0.3s ease;
   opacity: 0;
   pointer-events: none;
   z-index: 10;
 }
 
-/* Show popup smoothly on hover */
-.volume-wrapper:hover .volume-popup {
+/* Show popup when hovering either button OR popup */
+.volume-wrapper:hover .volume-popup,
+.volume-popup:hover {
   transform: translateX(-50%) scale(1);
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Volume slider (vertical look) */
+/* Volume slider (horizontal look) */
 #volume-slider {
-  writing-mode: bt-lr;
   appearance: none;
-  width: 6px;
-  height: 80px;
+  width: 120px;
+  height: 6px;
   cursor: pointer;
-  background: var(--accent-color);
-  border-radius: 4px;
-  accent-color: var(--accent-color);
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
+/* Thumb (the moving knob) */
+#volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+#volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
 
 /* Value display */
 #volume-value {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   margin-top: 0.3rem;
   color: var(--accent-color);
   font-weight: bold;
