@@ -66,16 +66,28 @@
       <audio id="audio"></audio>
 
       <!-- Progress bar + time -->
-       <div class="volume-controls">
-        <button id="mute-btn">🔊</button>
-        <input type="range" id="volume-slider" min="0" max="100" value="80">
-      </div>
-      <div class="progress-wrapper">
+       <div class="progress-wrapper">
         <span id="current-time">0:00</span>
         <div class="progress-container">
           <div id="progress"></div>
         </div>
         <span id="duration">0:00</span>
+      </div>
+      
+      <!-- Player Controls -->
+       <div class="controls">
+        <button id="prev">⏮</button>
+        <button id="play">▶️</button>
+        <button id="next">⏭</button>
+      </div>
+      
+      <!-- 🎧 Volume Control -->
+       <div class="volume-wrapper">
+        <button id="mute-btn" title="Volume">🔊</button>
+        <div class="volume-popup">
+          <input type="range" id="volume-slider" min="0" max="100" value="80" orient="vertical">
+          <span id="volume-value">80%</span>
+        </div>
       </div>
 
       <!-- Controls -->

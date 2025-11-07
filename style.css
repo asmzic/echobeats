@@ -27,17 +27,70 @@ body {
   perspective: 1000px; /* For parallax depth */
 }
 
-.volume-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.6rem;
+/* 🎧 Volume Control Styling */
+.volume-wrapper {
+  position: relative;
+  display: inline-block;
   margin-top: 1rem;
 }
 
+#mute-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.3s;
+}
+
+#mute-btn:hover {
+  color: var(--accent-color);
+  transform: scale(1.1);
+}
+
+/* Hidden popup (volume bar + value) */
+.volume-popup {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  box-shadow: 0 0 10px rgba(94,184,255,0.4);
+  text-align: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Show popup smoothly on hover */
+.volume-wrapper:hover .volume-popup {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Volume slider (vertical look) */
 #volume-slider {
-  width: 90px;
+  appearance: slider-vertical;
+  width: 6px;
+  height: 80px;
+  cursor: pointer;
+  background: var(--accent-color);
+  border-radius: 4px;
   accent-color: var(--accent-color);
+}
+
+/* Value display */
+#volume-value {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  color: var(--accent-color);
+  font-weight: bold;
 }
 
 /* Parallax Layers */

@@ -125,6 +125,24 @@ if (muteBtn) {
   });
 }
 
+// 🎚️ Smooth popup + live numeric value
+const volumePopup = document.querySelector(".volume-popup");
+const volumeValue = document.getElementById("volume-value");
+
+// Update displayed numeric value smoothly
+volumeSlider.addEventListener("input", (e) => {
+  const vol = e.target.value;
+  volumeValue.textContent = `${vol}%`;
+});
+
+// Optional: small glowing animation when hovered
+muteBtn.addEventListener("mouseenter", () => {
+  volumePopup.style.boxShadow = "0 0 15px rgba(94,184,255,0.7)";
+});
+muteBtn.addEventListener("mouseleave", () => {
+  volumePopup.style.boxShadow = "0 0 10px rgba(94,184,255,0.4)";
+});
+
 // ✅ Queue + Auto Next Fix
 audio.addEventListener("ended", () => {
   // If queue has songs, play next queued one
