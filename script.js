@@ -21,7 +21,8 @@ const audio = document.getElementById("audio"),
       progressContainer = document.querySelector(".progress-container"),
       progress = document.getElementById("progress"),
       currentTimeEl = document.getElementById("current-time"),
-      durationEl = document.getElementById("duration");
+      durationEl = document.getElementById("duration"),
+      queueListEl = document.getElementById("queue-list");
 
 // Optional: Create canvases dynamically if not in HTML
 let particleCanvas = document.getElementById("particle-canvas");
@@ -70,45 +71,41 @@ function nextSong() {
   updateQueueDisplay(); // Update queue list visually
 }
 
-// 1️⃣0️⃣ Update queue display
-function updateQueueDisplay() {
-  const queueList = document.getElementById("queue-list");
-  if (!queueList) return;
-  queueList.innerHTML = ""; // Clear previous queue
-
-  queue.forEach((idx, i) => {
-    const li = document.createElement("li");
-    li.textContent = songs[idx].title;
-    
-    // Clicking on a queue item removes it from queue
-    li.addEventListener("click", () => {
-      queue.splice(i, 1);
-      updateQueueDisplay();
-    });
-    
-    queueList.appendChild(li);
-  });
-}
-
 function prevSong(){
   currentSong = (currentSong-1+songs.length)%songs.length;
   loadSong(songs[currentSong]);
   if(isPlaying) audio.play();
 }
 
-// ✅ Volume Controls (Add near top after defining audio)
+// === 6️⃣ Queue Display ===
+function updateQueueDisplay() {
+  if (!queueListEl) return;
+  queueListEl.innerHTML = "";
+  queue.forEach((idx, i) => {
+    const li = document.createElement("li");
+    li.textContent = songs[idx].title;
+    li.addEventListener("click", () => {
+      queue.splice(i, 1);
+      updateQueueDisplay();
+    });
+    queueListEl.appendChild(li);
+  });
+}
+
+// === 7️⃣ Volume Controls ===
 const volumeSlider = document.getElementById("volume-slider");
 const muteBtn = document.getElementById("mute-btn");
+const volumePopup = document.querySelector(".volume-popup");
+const volumeValue = document.getElementById("volume-value");
 let isMuted = false;
 
-// Initial Volume
 audio.volume = 0.8;
 
-// 🎚️ Volume Control Events
 if (volumeSlider) {
   volumeSlider.addEventListener("input", (e) => {
     const vol = e.target.value / 100;
     audio.volume = vol;
+    volumeValue.textContent = `${Math.round(vol * 100)}%`;
     if (audio.volume > 0) {
       isMuted = false;
       muteBtn.textContent = "🔊";
@@ -125,95 +122,64 @@ if (muteBtn) {
   });
 }
 
-// 🎚️ Smooth popup + live numeric value
-const volumePopup = document.querySelector(".volume-popup");
-const volumeValue = document.getElementById("volume-value");
+// === 8️⃣ Volume Popup Smart Hover ===
+const volumeWrapper = document.querySelector('.volume-wrapper');
+let popupTimeout;
 
-// Update displayed numeric value smoothly
-volumeSlider.addEventListener("input", (e) => {
-  const vol = e.target.value;
-  volumeValue.textContent = `${vol}%`;
+volumeWrapper.addEventListener('mouseenter', () => {
+  clearTimeout(popupTimeout);
+  volumePopup.style.opacity = '1';
+  volumePopup.style.transform = 'translateX(-50%) scale(1)';
+  volumePopup.style.pointerEvents = 'auto';
 });
 
-// Optional: small glowing animation when hovered
-muteBtn.addEventListener("mouseenter", () => {
-  volumePopup.style.boxShadow = "0 0 15px rgba(94,184,255,0.7)";
-});
-muteBtn.addEventListener("mouseleave", () => {
-  volumePopup.style.boxShadow = "0 0 10px rgba(94,184,255,0.4)";
+volumeWrapper.addEventListener('mouseleave', () => {
+  popupTimeout = setTimeout(() => {
+    volumePopup.style.opacity = '0';
+    volumePopup.style.transform = 'translateX(-50%) scale(0.9)';
+    volumePopup.style.pointerEvents = 'none';
+  }, 600);
 });
 
-// ✅ Queue + Auto Next Fix
+// === 9️⃣ Queue + Auto Next Fix ===
 audio.addEventListener("ended", () => {
-  // If queue has songs, play next queued one
-  if (queue && queue.length > 0) {
-    const nextQueuedIndex = queue.shift();
-    renderQueue();
-    currentSongIndex = nextQueuedIndex;
-    loadSong(currentSongIndex);
+  if (queue.length > 0) {
+    currentSong = queue.shift();
+    updateQueueDisplay();
+    loadSong(songs[currentSong]);
     playSong();
   } else {
-    // Else play next song in playlist
-    currentSongIndex = (currentSongIndex + 1) % songs.length;
-    loadSong(currentSongIndex);
+    currentSong = (currentSong + 1) % songs.length;
+    loadSong(songs[currentSong]);
     playSong();
   }
 });
 
-// ✅ When song clicked
-function handleSongClick(index) {
-  if (isPlaying && currentSongIndex !== index) {
-    // If a song is playing, add to queue instead of interrupting
-    queue.push(index);
-    renderQueue();
-  } else {
-    // If nothing is playing, play it directly
-    currentSongIndex = index;
-    loadSong(currentSongIndex);
-    playSong();
-  }
-}
-
-// ✅ Render Queue Function (if missing)
-function renderQueue() {
-  if (!queueListEl) return;
-  queueListEl.innerHTML = "";
-  queue.forEach((qIndex) => {
-    const li = document.createElement("li");
-    li.textContent = songs[qIndex].title;
-    queueListEl.appendChild(li);
-  });
-}
-
-// === 6️⃣ Playlist Highlight ===
+// === 🔟 Playlist Highlight ===
 function updateActivePlaylist(){
   document.querySelectorAll("#song-list li").forEach((li, idx) => {
     li.classList.toggle("active", idx===currentSong);
   });
 }
 
-// === 7️⃣ Generate Playlist HTML ===
+// === 11️⃣ Generate Playlist HTML ===
 songs.forEach((song, index) => {
   const li = document.createElement("li");
   li.textContent = song.title;
-
   li.addEventListener("click", () => {
     if (isPlaying) {
-      // Song is playing, so add to queue instead of playing immediately
       queue.push(index);
     } else {
-      // No song playing, play this song immediately
       currentSong = index;
       loadSong(songs[currentSong]);
       playSong();
     }
-    updateQueueDisplay(); // Always refresh queue
+    updateQueueDisplay();
   });
-
   songList.appendChild(li);
 });
 
-// === 8️⃣ Progress bar ===
+// === 12️⃣ Progress bar ===
 audio.addEventListener("timeupdate", ()=>{
   const percent = (audio.currentTime / audio.duration) * 100;
   progress.style.width = percent + "%";
@@ -231,7 +197,6 @@ function formatTime(sec) {
   const hours = Math.floor(sec / 3600);
   const minutes = Math.floor((sec % 3600) / 60);
   const seconds = Math.floor(sec % 60);
-
   if (hours > 0) {
     return `${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   } else {
@@ -239,31 +204,29 @@ function formatTime(sec) {
   }
 }
 
-// === 9️⃣ Controls ===
+// === 13️⃣ Controls ===
 playBtn.addEventListener("click",()=>{ isPlaying ? pauseSong() : playSong(); });
 nextBtn.addEventListener("click", nextSong);
 prevBtn.addEventListener("click", prevSong);
 
-// === 1️⃣0️⃣ Theme toggle ===
+// === 14️⃣ Theme toggle ===
 themeToggle.addEventListener("click", ()=>{
   document.body.classList.toggle("light");
   themeToggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
 });
 
-// === 1️⃣1️⃣ Load first song ===
+// === 15️⃣ Load first song ===
 loadSong(songs[currentSong]);
 
-// === 1️⃣2️⃣ 3D Parallax ===
+// === 16️⃣ 3D Parallax ===
 document.addEventListener("mousemove", (e) => {
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2;
-
   const deltaX = e.clientX - centerX;
   const deltaY = e.clientY - centerY;
-
-  const threshold = 200; // only move if cursor near center
+  const threshold = 200;
   if (Math.abs(deltaX) < threshold && Math.abs(deltaY) < threshold) {
-    const x = (centerX - e.clientX) / 200; // smaller divisor => smaller movement
+    const x = (centerX - e.clientX) / 200;
     const y = (centerY - e.clientY) / 200;
     document.querySelector("header").style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
     document.querySelector(".player").style.transform = `rotateY(${x/2}deg) rotateX(${y/2}deg)`;
@@ -275,12 +238,11 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 
-// === 1️⃣3️⃣ Particles ===
+// === 17️⃣ Particles ===
 let particles = [];
 for(let i=0;i<120;i++){
   particles.push({x:Math.random()*particleCanvas.width, y:Math.random()*particleCanvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5)/2, dy:(Math.random()-0.5)/2});
 }
-
 function drawParticles(){
   pCtx.clearRect(0,0,particleCanvas.width,particleCanvas.height);
   particles.forEach(p=>{
@@ -296,7 +258,7 @@ function drawParticles(){
 }
 drawParticles();
 
-// === 1️⃣4️⃣ Audio Spectrum ===
+// === 18️⃣ Audio Spectrum ===
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
 const analyser = audioCtx.createAnalyser();
 const source = audioCtx.createMediaElementSource(audio);
@@ -308,20 +270,18 @@ const dataArray = new Uint8Array(bufferLength);
 
 function resizeSpectrumCanvas() {
   spectrumCanvas.width = window.innerWidth;
-  spectrumCanvas.height = window.innerWidth < 768 ? 80 : 120; // smaller height for mobile
+  spectrumCanvas.height = window.innerWidth < 768 ? 80 : 120;
 }
 window.addEventListener("resize", resizeSpectrumCanvas);
-resizeSpectrumCanvas(); // call once on load
+resizeSpectrumCanvas();
 
 function drawSpectrum() {
   requestAnimationFrame(drawSpectrum);
   sCtx.clearRect(0, 0, spectrumCanvas.width, spectrumCanvas.height);
   analyser.getByteFrequencyData(dataArray);
-
   const barWidth = (spectrumCanvas.width / bufferLength) * (window.innerWidth < 768 ? 1.5 : 2.5);
   const maxBarHeight = window.innerWidth < 768 ? 40 : 60;
   let x = 0;
-
   for (let i = 0; i < bufferLength; i++) {
     const barHeight = (dataArray[i] / 255) * maxBarHeight;
     sCtx.fillStyle = "rgba(94,184,255,0.8)";
@@ -329,29 +289,7 @@ function drawSpectrum() {
     x += barWidth + 1;
   }
 }
-
 audio.addEventListener("play", ()=>{
   audioCtx.resume();
   drawSpectrum();
-});
-
-// 🎧 Volume Popup Smart Hover
-const volumeWrapper = document.querySelector('.volume-wrapper');
-const volumePopup = document.querySelector('.volume-popup');
-
-let popupTimeout;
-
-volumeWrapper.addEventListener('mouseenter', () => {
-  clearTimeout(popupTimeout);
-  volumePopup.style.opacity = '1';
-  volumePopup.style.transform = 'translateX(-50%) scale(1)';
-  volumePopup.style.pointerEvents = 'auto';
-});
-
-volumeWrapper.addEventListener('mouseleave', () => {
-  popupTimeout = setTimeout(() => {
-    volumePopup.style.opacity = '0';
-    volumePopup.style.transform = 'translateX(-50%) scale(0.9)';
-    volumePopup.style.pointerEvents = 'none';
-  }, 400); // 👈 stays visible for 0.4 seconds before closing
 });
