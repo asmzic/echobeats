@@ -7,7 +7,7 @@ const songs = [
   { title:"Anirudh Mass Playlist", artist:"Anirudh Ravichander", src:"songs/Anirudh-Mass-Playlist.mp3", cover:"images/default-cover.jpg"},
   { title:"Chaleya x Khudaya Ishq", artist:"Anirudh Ravichander", src:"songs/chaleya-x-khudaya-ishq.mp3", cover:"images/default-cover.jpg"},
   { title:"Dahaa Extended BGM", artist:"Anirudh Ravichander", src:"songs/coolie-dahaa-bgm.mp3", cover:"images/default-cover.jpg"},
-  { title:"Golden Days - An Original By EchoBeats", artist:"ASMZIC", src:"songs/Golden Days - An Original By EchoBeats.mp3", cover:"images/default-cover.jpg"}
+  { title:"Golden Days - An Original By EchoBeats", artist:"ASMZIC", src:"songs/Golden-Days-An-Original-By-EchoBeats.mp3", cover:"images/default-cover.jpg"}
 ];
 
 // === 2️⃣ Grab HTML elements ===
