@@ -123,13 +123,15 @@ body {
 
 /* Particle Canvas */
 #particle-canvas {
-  position: absolute;
-  top:0; left:0;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;   /* 👈 behind content */
 }
+
 
 /* Spectrum Canvas */
 #spectrum-canvas {
@@ -307,6 +309,8 @@ footer {
 .youtube-section {
   width: 85%;
   margin: 3rem auto;
+  position: relative;
+  z-index: 2;
 }
 
 #youtube-feed {
@@ -335,4 +339,24 @@ footer {
 .yt-card p {
   margin-top: 0.5rem;
   font-size: 0.9rem;
+}
+
+/* YouTube feed link colors */
+#youtube-feed a {
+  color: var(--text-color);        /* matches site text */
+  text-decoration: none;
+}
+
+#youtube-feed a:hover {
+  color: var(--accent-color);      /* nice glow on hover */
+}
+
+#youtube-feed a {
+  display: block;
+  padding: 0.4rem 0;
+  transition: color 0.3s ease;
+}
+
+.yt-card a {
+  color: inherit;
 }
