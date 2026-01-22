@@ -370,3 +370,21 @@ footer {
   position: relative;
   z-index: 2;
 }
+
+.soundcloud-section iframe {
+  border-radius: 18px;
+  filter: brightness(0.95);
+}
+
+/* Smooth reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  will-change: transform, opacity;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
