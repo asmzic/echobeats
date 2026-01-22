@@ -51,7 +51,7 @@ body {
 /* Hidden popup (volume bar + value) */
 .volume-popup {
   position: absolute;
-  bottom: 150%;
+  bottom: 140%;
   left: 50%;
   transform: translateX(-50%) scale(0.9);
   background: rgba(255, 255, 255, 0.1);
@@ -120,6 +120,7 @@ body {
 }
 .layer1 { background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 80%); }
 .layer2 { background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 70%); }
+.layer3 { background: radial-gradient(circle at center, rgba(255,255,255,0.02), transparent 65%); }
 
 /* Particle Canvas */
 #particle-canvas {
@@ -359,4 +360,13 @@ footer {
 
 .yt-card a {
   color: inherit;
+}
+
+header,
+.player,
+.playlist,
+.youtube-section,
+footer {
+  position: relative;
+  z-index: 2;
 }
