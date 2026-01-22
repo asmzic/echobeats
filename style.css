@@ -303,3 +303,36 @@ footer {
   z-index:2;
   position:relative;
 }
+
+.youtube-section {
+  width: 85%;
+  margin: 3rem auto;
+}
+
+#youtube-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.yt-card {
+  background: rgba(255,255,255,0.08);
+  padding: 0.8rem;
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.yt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 15px rgba(94,184,255,0.4);
+}
+
+.yt-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.yt-card p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}

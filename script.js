@@ -294,3 +294,22 @@ audio.addEventListener("play", ()=>{
   audioCtx.resume();
   drawSpectrum();
 });
+
+fetch("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.youtube.com%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUCi7dyzSxgO7Hsn8EkcTi7sg")
+  .then(res => res.json())
+  .then(data => {
+    const feed = document.getElementById("youtube-feed");
+    if (!feed) return;
+
+    data.items.slice(0, 4).forEach(video => {
+      const card = document.createElement("div");
+      card.className = "yt-card";
+      card.innerHTML = `
+        <a href="${video.link}" target="_blank">
+          <img src="${video.thumbnail}" alt="${video.title}">
+          <p>${video.title}</p>
+        </a>
+      `;
+      feed.appendChild(card);
+    });
+  });
