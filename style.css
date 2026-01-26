@@ -388,3 +388,18 @@ footer {
   opacity: 1;
   transform: translateY(0);
 }
+
+.social-links {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.social-links a {
+  color: #aaa;
+  text-decoration: none;
+  margin: 0 6px;
+}
+
+.social-links a:hover {
+  color: #fff;
+}
