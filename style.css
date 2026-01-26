@@ -408,7 +408,7 @@ footer {
   text-align: center;
   padding: 20px 0;
   font-family: Arial, sans-serif;
-  color: #666;
+  color: #e0e0e0;
 }
 
 .social-links {
@@ -427,7 +427,7 @@ footer {
 }
 
 .separator {
-  color: #666;
+  color: #cccccc;
   user-select: none;
   font-weight: bold;
 }
